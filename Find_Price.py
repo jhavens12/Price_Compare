@@ -36,9 +36,9 @@ def open_file():
 def close_file(historical_dict):
     historical_dict['timestamp'] = datetime.datetime.now()
     dictionary_file = Path('./History.dict')
-    with open(dictionary_file, 'w') as outfile:
+    with open(str(dictionary_file), 'w') as outfile:
         #json.dump(history_dict, outfile)
-        pickle_out = open(dictionary_file,"wb")
+        pickle_out = open(str(dictionary_file),"wb")
         pickle.dump(historical_dict, pickle_out) #save old_dict as it has all of the data
         pickle_out.close()
 
