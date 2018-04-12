@@ -23,11 +23,11 @@ def nice_time(time):
 def open_file():
     dictionary_file = Path('./History.dict')
     if dictionary_file.is_file():
-        pickle_in = open(dictionary_file,"rb")
+        pickle_in = open(str(dictionary_file),"rb")
         historical_dict = pickle.load(pickle_in)
         #dictionary already has a timestamp key
     else:
-        f=open(dictionary_file,"w+") #create file
+        f=open(str(dictionary_file),"w+") #create file
         f.close()
         historical_dict = {}
 
