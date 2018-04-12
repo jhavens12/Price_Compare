@@ -4,6 +4,9 @@ from pprint import pprint
 import credentials
 import links
 import yagmail
+from pathlib import Path
+import datetime
+import pickle
 
 gmail_user = credentials.gmail_user
 gmail_password = credentials.gmail_password
@@ -12,11 +15,32 @@ yag = yagmail.SMTP( gmail_user, gmail_password)
 from amazon.api import AmazonAPI
 amazon = AmazonAPI(credentials.access_key, credentials.secret_key, credentials.ass_tag)
 
-#input link dictionary
-#calculate prices - create new dictionary?
-#compare prices to MSRP
-#print if on sale
-#possibly compare pricing to historical prices
+def nice_time(time):
+    #return str(time.hour)+":"+str(time.minute)+":"+str(time.second)
+    #return str(time.time().strftime("%I:%M:%S"))
+    return str(time.year)+"/"+str(time.month)+"/"+str(time.day)
+
+def open_file():
+    dictionary_file = Path('./History.dict')
+    if dictionary_file.is_file():
+        pickle_in = open(dictionary_file,"rb")
+        historical_dict = pickle.load(pickle_in)
+        #dictionary already has a timestamp key
+    else:
+        f=open(dictionary_file,"w+") #create file
+        f.close()
+        historical_dict = {}
+
+    return historical_dict
+
+def close_file(historical_dict):
+    historical_dict['timestamp'] = datetime.datetime.now()
+    dictionary_file = Path('./History.dict')
+    with open(dictionary_file, 'w') as outfile:
+        #json.dump(history_dict, outfile)
+        pickle_out = open(dictionary_file,"wb")
+        pickle.dump(historical_dict, pickle_out) #save old_dict as it has all of the data
+        pickle_out.close()
 
 def extract_source(url):
     headers = {"User-Agent":"Mozilla/5.0"}
@@ -24,41 +48,61 @@ def extract_source(url):
     return source
 
 def bby(website):
-    page = extract_source(website)
-    soup = BeautifulSoup(page, 'html.parser')
-    name_box = soup.find(attrs={'class': 'price-block priceblock-large'})
-    price = name_box.get('data-customer-price')
-    return price
+    try:
+        page = extract_source(website)
+        soup = BeautifulSoup(page, 'html.parser')
+        name_box = soup.find(attrs={'class': 'price-block priceblock-large'})
+        price = name_box.get('data-customer-price')
+        return price
+    except:
+        print("BBY ERROR")
+        return 99999
 
 def gs(website):
-    page = extract_source(website)
-    soup = BeautifulSoup(page, 'html.parser')
-    name_box = soup.find('h3', attrs={'class': 'ats-prodBuy-price'})
-    price1 = name_box.span
-    price = price1.text
-    return price
+    try:
+        page = extract_source(website)
+        soup = BeautifulSoup(page, 'html.parser')
+        name_box = soup.find('h3', attrs={'class': 'ats-prodBuy-price'})
+        price1 = name_box.span
+        price = price1.text
+        return price
+    except:
+        print("GS Error")
+        return 99999
 
 def walmart(website):
-    page = extract_source(website)
-    soup = BeautifulSoup(page, 'html.parser')
-    name_box = soup.find(attrs={'class': "Price-characteristic"})
-    price = name_box.get('content')
-    return price
+    try:
+        page = extract_source(website)
+        soup = BeautifulSoup(page, 'html.parser')
+        name_box = soup.find(attrs={'class': "Price-characteristic"})
+        price = name_box.get('content')
+        return price
+    except:
+        print("Walmart error")
+        return 99999
 
 def target(website):
-    page = extract_source(website)
-    soup = BeautifulSoup(page, 'html.parser')
-    name_box = soup.find(attrs={'data-test': "product-price"})
-    price1 = name_box.span
-    price2 = price1.text
-    price = str(price2).replace('$','')
-    return price
+    try:
+        page = extract_source(website)
+        soup = BeautifulSoup(page, 'html.parser')
+        name_box = soup.find(attrs={'data-test': "product-price"})
+        price1 = name_box.span
+        price2 = price1.text
+        price = str(price2).replace('$','')
+        return price
+    except:
+        print("Target error")
+        return 99999
 
 def get_amazon(website):
-    product = amazon.lookup(ItemId=website)
-    price1 = product.price_and_currency[0]
-    price = str(price1).replace("Decimal('')",'')
-    return price
+    try:
+        product = amazon.lookup(ItemId=website)
+        price1 = product.price_and_currency[0]
+        price = str(price1).replace("Decimal('')",'')
+        return price
+    except:
+        print("amazon error")
+        return 99999
 
 def eshop(website):
     page = extract_source(website)
@@ -77,21 +121,20 @@ def eshop(website):
     else:
         return sale_price
 
-
 def get_prices(dict):
     price_dict = {}
     for entry in dict:
-        if entry == 'bby':
+        if entry == 'Best Buy':
             price_dict[entry] = bby(dict[entry])
-        if entry == 'gs':
+        if entry == 'Game Stop':
             price_dict[entry] = gs(dict[entry])
-        if entry == 'wal':
+        if entry == 'Walmart':
             price_dict[entry] = walmart(dict[entry])
-        if entry == 'tar':
+        if entry == 'Target':
             price_dict[entry] = target(dict[entry])
-        if entry == 'amazon':
+        if entry == 'Amazon':
             price_dict[entry] = get_amazon(dict[entry])
-        if entry == 'eshop':
+        if entry == 'eShop':
             price_dict[entry] = eshop(dict[entry])
     return price_dict
 
@@ -101,36 +144,39 @@ def print_price_dict(item,msrp,dict):
     print("*****")
     for entry in dict: #for each price listing for item
         if float(dict[entry]) < msrp:
-            if entry == 'bby':
+            if entry == 'Best Buy':
                 print("Best Buy: $"+dict[entry])
-            if entry == 'gs':
+            if entry == 'Game Stop':
                 print("Game Stop: $"+dict[entry])
-            if entry == 'wal':
+            if entry == 'Walmart':
                 print("Walmart: $"+dict[entry])
-            if entry == 'tar':
+            if entry == 'Target':
                 print("Target: $"+dict[entry])
-            if entry == 'amazon':
+            if entry == 'Amazon':
                 print("Amazon: $"+dict[entry])
-            if entry == 'eshop':
+            if entry == 'eShop':
                 print("eShop: $"+dict[entry])
     print()
 
-def build_output(item,msrp,dict,link_dict): #this will be done for each item
+def build_output(historical_dict,item,msrp,dict,link_dict): #this will be done for each item
     list1 = []
-    list1.append(item + " - "+"MSRP: "+str(msrp)+'\n*******')
+    #list1.append(item + " - "+"MSRP: "+str(msrp)+'\n*******')
+    history = "Low: $"+str(historical_dict[item]['low_price'])+"\nAt: "+nice_time(historical_dict[item]['low_price_time'])+"\nOn: "+historical_dict[item]['location']+"\n"
+    list1.append("<font size='+1'>"+ item + " - " + "MSRP: $" + str(msrp) + '\n</font>'+history+'************')
+
     for entry in dict: #for each price listing for item
         if float(dict[entry]) < msrp:
-            if entry == 'bby':
+            if entry == 'Best Buy':
                 list1.append('Best Buy: <a href='+link_dict[entry]+'>$'+dict[entry]+'</a>')
-            if entry == 'gs':
+            if entry == 'Game Stop':
                 list1.append('Game Stop: <a href='+link_dict[entry]+'>$'+dict[entry]+'</a>')
-            if entry == 'wal':
+            if entry == 'Walmart':
                 list1.append('Walmart: <a href='+link_dict[entry]+'>$'+dict[entry]+'</a>')
-            if entry == 'tar':
+            if entry == 'Target':
                 list1.append('Target: <a href='+link_dict[entry]+'>$'+dict[entry]+'</a>')
-            if entry == 'amazon':
+            if entry == 'Amazon':
                 list1.append('Amazon: <a href=https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords='+link_dict[entry]+'>$'+dict[entry]+'</a>')
-            if entry == 'eshop':
+            if entry == 'eShop':
                 list1.append('eShop: <a href='+link_dict[entry]+'>$'+dict[entry]+'</a>')
     list1.append('\n')
 
@@ -139,30 +185,45 @@ def build_output(item,msrp,dict,link_dict): #this will be done for each item
     else:
         return None
 
+def compare_historical(item,historical_dict,price_dict):
+    #pprint(price_dict) #bby as key, price as value
+    if item not in historical_dict:
+        historical_dict[item] = {}
+        historical_dict[item]['low_price'] = 99999
+        historical_dict[item]['low_price_time'] = 0
+    for value in price_dict: #for each  value
+        if float(price_dict[value]) < float(historical_dict[item]['low_price']):
+            historical_dict[item]['location'] = value
+            historical_dict[item]['low_price'] = price_dict[value]
+            historical_dict[item]['low_price_time'] = datetime.datetime.now()
+
+historical_dict = open_file()
 
 send_list = []
-send_list.append("<b><font size='+2'>Joycons:</b></font>\n")
+send_list.append("<b><font size='+2'>Joycons:</font></b>\n\n")
 
 for item in links.joycons:
     price_dict = get_prices(links.joycons[item]['links'])
     #print_price_dict(item,links.joycons[item]['msrp'],price_dict) #msrp and price dict
-    print_list = build_output(item,links.joycons[item]['msrp'],price_dict,links.joycons[item]['links'])
+    compare_historical(item,historical_dict,price_dict)
+    print_list = build_output(historical_dict,item,links.joycons[item]['msrp'],price_dict,links.joycons[item]['links'])
     if print_list != None: #account for none return if list is None
         test_list = "\n".join(print_list)
         send_list.append(test_list)
 
-send_list.append("<b><font size='+2'>Games:</b></font>\n")
+send_list.append("<b><font size='+2'>Games:</font></b>\n\n")
 
 for item in links.games:
     price_dict = get_prices(links.games[item]['links'])
     #print_price_dict(item,links.joycons[item]['msrp'],price_dict) #msrp and price dict
-    print_list = build_output(item,links.games[item]['msrp'],price_dict,links.games[item]['links'])
+    compare_historical(item,historical_dict,price_dict)
+    print_list = build_output(historical_dict,item,links.games[item]['msrp'],price_dict,links.games[item]['links'])
     if print_list != None: #account for none return if list is None
         test_list = "\n".join(print_list)
         send_list.append(test_list)
 
+close_file(historical_dict) #save historical lows
+
 real_send = "".join(send_list)
 
-#jon_contents = 'Email Gropus: ' + '\n\n'
-#html = '<a href="https://google.com">New Staff Process spreadsheet</a>'
 yag.send('jhavens12@gmail.com', 'SWITCH Pricing', [real_send])
