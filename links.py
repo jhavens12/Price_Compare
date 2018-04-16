@@ -71,16 +71,6 @@ joycons['Joycons: Blue']['links']['Amazon'] = 'B01MT8RT5I'
 ### games
 games = {}
 
-games['Mario Kart 8 Deluxe'] = {}
-games['Mario Kart 8 Deluxe']['msrp'] = 59.99
-games['Mario Kart 8 Deluxe']['links'] = {}
-games['Mario Kart 8 Deluxe']['links']['Best Buy'] = 'https://www.bestbuy.com/site/mario-kart-8-deluxe-nintendo-switch/5723304.p?skuId=5723304'
-games['Mario Kart 8 Deluxe']['links']['Game Stop'] = 'https://www.gamestop.com/nintendo-switch/games/mario-kart-8-deluxe/141928'
-games['Mario Kart 8 Deluxe']['links']['Walmart'] = 'https://www.walmart.com/ip/Mario-Kart-8-Deluxe-Nintendo-Nintendo-Switch-045496590475/55432571'
-games['Mario Kart 8 Deluxe']['links']['Target'] = 'https://www.target.com/p/mario-kart-8-deluxe-nintendo-switch/-/A-52161278'
-games['Mario Kart 8 Deluxe']['links']['Amazon'] ='B01N1037CV'
-games['Mario Kart 8 Deluxe']['links']['eShop']= 'https://www.nintendo.com/games/detail/mario-kart-8-deluxe-switch'
-
 games['Breath of the Wild'] = {}
 games['Breath of the Wild']['msrp'] = 59.99
 games['Breath of the Wild']['links'] = {}
@@ -114,24 +104,49 @@ games['Splatoon 2']['links']['eShop'] = 'https://www.nintendo.com/games/detail/s
 games['Rocket League'] = {}
 games['Rocket League']['msrp'] = 19.99
 games['Rocket League']['links'] = {}
-# games['Rocket League']['links']['Best Buy'] =
-# games['Rocket League']['links']['Game Stop'] =
-# games['Rocket League']['links']['Walmart'] =
-# games['Rocket League']['links']['Target'] =
-# games['Rocket League']['links']['Amazon'] =
 games['Rocket League']['links']['eShop'] = 'https://www.nintendo.com/games/detail/rocket-league-switch'
 
 games['Rocket League Collectors Edition'] = {}
 games['Rocket League Collectors Edition']['msrp'] = 39.99
 games['Rocket League Collectors Edition']['links'] = {}
-games['Rocket League Collectors Edition']['links']['Best Buy'] = 'https://www.bestbuy.com/site/rocket-league-collectors-edition-nintendo-switch/5896301.p?skuId=5896301&cmp=RMX&extStoreId=1091&ref=212&loc=1&gclid=CJmj79mjstoCFYLXswod7T4MFA&gclsrc=ds'
-games['Rocket League Collectors Edition']['links']['Game Stop'] = 'https://www.gamestop.com/nintendo-switch/games/rocket-league-collectors-edition/157234'
-games['Rocket League Collectors Edition']['links']['Walmart'] = 'https://www.walmart.com/ip/Rocket-League-NSW/592506960'
-#games['Rocket League Collectors Edition']['links']['Target'] =
-games['Rocket League Collectors Edition']['links']['Amazon'] = 'B077ZQYXY2'
+# games['Rocket League Collectors Edition']['links']['Best Buy'] = 'https://www.bestbuy.com/site/rocket-league-collectors-edition-nintendo-switch/5896301.p?skuId=5896301&cmp=RMX&extStoreId=1091&ref=212&loc=1&gclid=CJmj79mjstoCFYLXswod7T4MFA&gclsrc=ds'
+# games['Rocket League Collectors Edition']['links']['Game Stop'] = 'https://www.gamestop.com/nintendo-switch/games/rocket-league-collectors-edition/157234'
+# games['Rocket League Collectors Edition']['links']['Walmart'] = 'https://www.walmart.com/ip/Rocket-League-NSW/592506960'
+# #games['Rocket League Collectors Edition']['links']['Target'] =
+# games['Rocket League Collectors Edition']['links']['Amazon'] = 'B077ZQYXY2'
 games['Rocket League Collectors Edition']['links']['eShop'] = 'https://www.nintendo.com/games/detail/rocket-league-collectors-edition-switch'
 
-games['Shovel Knight'] = {}
-games['Shovel Knight']['msrp'] = 24.99
-games['Shovel Knight']['links'] = {}
-games['Shovel Knight']['links']['eShop'] = 'https://www.nintendo.com/games/detail/shovel-knight-treasure-trove-switch'
+games['Shovel Knight: Treasure Trove'] = {}
+games['Shovel Knight: Treasure Trove']['msrp'] = 24.99
+games['Shovel Knight: Treasure Trove']['links'] = {}
+games['Shovel Knight: Treasure Trove']['links']['eShop'] = 'https://www.nintendo.com/games/detail/shovel-knight-treasure-trove-switch'
+
+games['Minecraft'] = {}
+games['Minecraft']['msrp'] = 29.99
+games['Minecraft']['links'] = {}
+games['Minecraft']['links']['eShop'] = 'https://www.nintendo.com/games/detail/minecraft-nintendo-switch-edition-digital-version'
+
+games['Skyrim'] = {}
+games['Skyrim']['msrp'] = 59.99
+games['Skyrim']['links'] = {}
+games['Skyrim']['links']['eShop'] = 'https://www.nintendo.com/games/detail/the-elder-scrolls-v-skyrim-switch'
+
+games['CELESTE'] = {}
+games['CELESTE']['msrp'] = 19.99
+games['CELESTE']['links'] = {}
+games['CELESTE']['links']['eShop'] = 'https://www.nintendo.com/games/detail/celeste-switch'
+
+games['FIFA 18'] = {}
+games['FIFA 18']['msrp'] = 59.99
+games['FIFA 18']['links'] = {}
+games['FIFA 18']['links']['eShop'] = 'https://www.nintendo.com/games/detail/ea-sports-fifa-18-switch'
+
+games['Stardew Valley'] = {}
+games['Stardew Valley']['msrp'] = 14.99
+games['Stardew Valley']['links'] = {}
+games['Stardew Valley']['links']['eShop'] = 'https://www.nintendo.com/games/detail/stardew-valley-switch'
+
+# games['Donkey Kong Country: Tropical Freeze'] = {}
+# games['Donkey Kong Country: Tropical Freeze']['msrp'] = 59.99
+# games['Donkey Kong Country: Tropical Freeze']['links'] = {}
+# games['Donkey Kong Country: Tropical Freeze']['links']['eShop'] = 'https://www.nintendo.com/games/detail/donkey-kong-country-tropical-freeze-switch'

@@ -105,21 +105,25 @@ def get_amazon(website):
         return 99999
 
 def eshop(website):
-    page = extract_source(website)
-    soup = BeautifulSoup(page, 'html.parser')
-    name_box = soup.find(attrs={'class': 'sale-price'})
-    test = str(name_box.text).replace("\n",'')
-    test2 = test.replace("*",'')
-    sale_price = test2.replace("$",'')
-    if sale_price == '':
+    try:
+        page = extract_source(website)
         soup = BeautifulSoup(page, 'html.parser')
-        name_box = soup.find(attrs={'class': 'msrp'})
+        name_box = soup.find(attrs={'class': 'sale-price'})
         test = str(name_box.text).replace("\n",'')
         test2 = test.replace("*",'')
-        msrp = test2.replace("$",'')
-        return msrp
-    else:
-        return sale_price
+        sale_price = test2.replace("$",'')
+        if sale_price == '':
+            soup = BeautifulSoup(page, 'html.parser')
+            name_box = soup.find(attrs={'class': 'msrp'})
+            test = str(name_box.text).replace("\n",'')
+            test2 = test.replace("*",'')
+            msrp = test2.replace("$",'')
+            return msrp
+        else:
+            return sale_price
+    except:
+        print("eshop error")
+        return 99999
 
 def get_prices(dict):
     price_dict = {}
@@ -161,6 +165,7 @@ def print_price_dict(item,msrp,dict):
 def build_output(historical_dict,item,msrp,dict,link_dict): #this will be done for each item
     list1 = []
     #list1.append(item + " - "+"MSRP: "+str(msrp)+'\n*******')
+    print(item)
     history = "Low: $"+str(historical_dict[item]['low_price'])+"\nAt: "+nice_time(historical_dict[item]['low_price_time'])+"\nOn: "+historical_dict[item]['location']+"\n"
     list1.append("<font size='+1'>"+ item + " - " + "MSRP: $" + str(msrp) + '\n</font>'+history+'************')
 
@@ -190,7 +195,8 @@ def compare_historical(item,historical_dict,price_dict):
     if item not in historical_dict:
         historical_dict[item] = {}
         historical_dict[item]['low_price'] = 99999
-        historical_dict[item]['low_price_time'] = 0
+        historical_dict[item]['location'] = 'None'
+        historical_dict[item]['low_price_time'] = datetime.datetime.now()
     for value in price_dict: #for each  value
         if float(price_dict[value]) < float(historical_dict[item]['low_price']):
             historical_dict[item]['location'] = value
