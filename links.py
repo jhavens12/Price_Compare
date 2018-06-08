@@ -7,7 +7,7 @@ accessories['Joycon Charging Grip']['Walmart'] = 'https://www.walmart.com/ip/Nin
 accessories['Joycon Charging Grip']['Target'] = 'https://www.target.com/p/nintendo-174-switch-joy-con-153-charging-grip/-/A-52180893'
 accessories['Joycon Charging Grip']['Amazon'] = 'B01N33MFPK'
 
-# joycons = {}
+joycons = {}
 # #pink and green
 # joycons['Joycons: Pink and Green'] = {}
 # joycons['Joycons: Pink and Green']['msrp'] = 79.99

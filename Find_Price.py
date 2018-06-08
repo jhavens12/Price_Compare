@@ -7,6 +7,7 @@ import yagmail
 from pathlib import Path
 import datetime
 import pickle
+import datetime
 
 gmail_user = credentials.gmail_user
 gmail_password = credentials.gmail_password
@@ -231,5 +232,7 @@ for item in links.games:
 close_file(historical_dict) #save historical lows
 
 real_send = "".join(send_list)
-
-yag.send('jhavens12@gmail.com', 'SWITCH Pricing', [real_send])
+d_date = datetime.datetime.now()
+reg_format_date = str(d_date.strftime("%Y-%m-%d %I:%M:%S %p"))
+title = "SWITCH Pricing: "+reg_format_date
+yag.send('jhavens12@gmail.com', title, [real_send])
